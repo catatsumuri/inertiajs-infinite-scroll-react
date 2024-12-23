@@ -15,7 +15,8 @@ class LoadWhenVisibleController extends Controller
         $text = fake()->realText(2000);
         return Inertia::render('LoadWhenVisible', [
             'text'  => $text,
-            'users' => Inertia::optional(fn() => $this->getUsers()),
+            // 'users' => Inertia::optional(fn() => $this->getUsers()),
+            'users' => fn () => $this->getUsers(),
         ]);
     }
 
