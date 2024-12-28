@@ -9,7 +9,7 @@ export default function MergingProps({ users, currentPage }) {
    * and maintaining the scroll position.
    */
   const handleNextPageClick = () => {
-    router.visit('/merging-props', {
+    router.visit(route('merging-props'), {
       method: 'get', // HTTP GET request to fetch the next page.
       data: { page: currentPage + 1 }, // Increment the current page number.
       only: ['users', 'currentPage'], // Fetch only the required props to minimize payload.
