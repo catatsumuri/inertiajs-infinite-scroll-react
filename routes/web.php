@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\LoadWhenVisibleController;
+use App\Http\Controllers\PartialReloadController;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -17,6 +19,10 @@ Route::get('/', function () {
 });
 
 Route::get('/load-when-visible', LoadWhenVisibleController::class)->name('load-when-visible');
+#Route::get('/partial-reload', [PartialReloadController::class, 'index'])->name('partial-reload-index');
+Route::match(['get', 'post'], '/partial-reload', [PartialReloadController::class, 'index'])
+    ->name('partial-reload-index');
+Route::post('/partial-reload/data', [PartialReloadController::class, 'data'])->name('partial-reload-data');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
