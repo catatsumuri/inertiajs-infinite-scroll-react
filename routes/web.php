@@ -4,28 +4,45 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\LoadWhenVisibleController;
 use App\Http\Controllers\MergingPropsController;
-use App\Http\Controllers\PaginationDemoController;
-use App\Http\Controllers\DemoController;
-use App\Http\Controllers\PreserveUrlDemoController;
-use App\Http\Controllers\PartialReloadController;
+use App\Http\Controllers\InfiniteScrollController;
+use App\Http\Controllers\DeferredPropsController;
+use App\Http\Controllers\PollingController;
+
+
+#use App\Http\Controllers\PaginationDemoController;
+#use App\Http\Controllers\DemoController;
+#use App\Http\Controllers\PreserveUrlDemoController;
+#use App\Http\Controllers\PartialReloadController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Models\User;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        // 'stats' => getStats(),
+        'stats' => Inertia::defer(fn () => getStats(), 'stats'),
     ]);
 });
+
+function getStats() {
+    sleep(2);
+    return ['users' => User::count() ];
+}
 
 Route::get('/load-when-visible', LoadWhenVisibleController::class)->name('load-when-visible');
 Route::get('/merging-props', MergingPropsController::class)->name('merging-props');
 Route::match(['get', 'post'], '/partial-reload', [PartialReloadController::class, 'index'])
     ->name('partial-reload-index');
+Route::get('/infinite-scroll', InfiniteScrollController::class)->name('infinite-scroll');
+Route::post('/infinite-scroll', InfiniteScrollController::class)->name('infinite-scroll');
+Route::get('/deferred-props', DeferredPropsController::class)->name('deferred-props');
+Route::get('/polling', PollingController::class)->name('polling');
 
 
 #Route::post('/partial-reload/data', [PartialReloadController::class, 'data'])->name('partial-reload-data');

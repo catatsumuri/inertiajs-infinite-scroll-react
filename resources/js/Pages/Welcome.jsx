@@ -1,6 +1,8 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, Deferred } from '@inertiajs/react';
+import StatsBox from '@/Components/StatsBox';
 
-export default function Welcome({ auth, laravelVersion, phpVersion }) {
+export default function Welcome({ auth, laravelVersion, phpVersion, stats }) {
+  console.log(stats);
   return (
     <>
       <Head title="Welcome" />
@@ -36,9 +38,42 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
           </li>
         </ul>
 
+        <div className="mt-8">
+          <h3 className="text-base font-semibold leading-6 text-gray-900 mb-4">Stats</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <Deferred data="stats" fallback={<StatsBox />}>
+              {typeof stats === 'object' && stats !== null && Object.entries(stats).map(([key, value]) => (
+                <StatsBox key={key} label={key} value={value} />
+              ))}
+            </Deferred>
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          {auth.user ? (
+            <Link
+              href={route('dashboard')}
+              className="rounded-md px-4 py-2 bg-blue-600 text-white font-semibold shadow-md transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <Link
+              href={route('login')}
+              className="rounded-md px-4 py-2 bg-gray-600 text-white font-semibold shadow-md transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              Log in
+            </Link>
+          )}
+        </div>
+
         <footer className="mt-8 text-center text-sm text-gray-500">
-          <p>Laravel Version: <span className="font-mono">{laravelVersion}</span></p>
-          <p>PHP Version: <span className="font-mono">{phpVersion}</span></p>
+          <p>
+            Laravel Version: <span className="font-mono">{laravelVersion}</span>
+          </p>
+          <p>
+            PHP Version: <span className="font-mono">{phpVersion}</span>
+          </p>
         </footer>
       </div>
     </>
